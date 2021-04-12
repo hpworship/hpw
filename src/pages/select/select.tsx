@@ -1,12 +1,24 @@
 // import { useFullScreenHandle, FullScreen } from 'react-full-screen';
-import { useRecoilState } from 'recoil';
-import { Button, viewModeState } from '../../component/button/button';
+import { Button } from '../../component/button/button';
 import { Result } from '../select_result/result';
 import './select.css';
-export const Select = () => {
-  const [viewState] = useRecoilState(viewModeState);
+function iOS() {
   return (
-    <div className={'baseMode' + viewState.toString()}>
+    [
+      'iPad Simulator',
+      'iPhone Simulator',
+      'iPod Simulator',
+      'iPad',
+      'iPhone',
+      'iPod'
+    ].includes(navigator.platform) ||
+    // iPad on iOS 13 detection
+    (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+  );
+}
+export const Select = () => {
+  return (
+    <div className={iOS() ? 'baseModeiOS' : 'baseModeAll'}>
       <div className="result">
         <Result />
       </div>

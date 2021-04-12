@@ -1,4 +1,4 @@
-.show {
+.showiOS {
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -6,6 +6,16 @@
   position: relative;
   overflow: hidden;
   height: 90vh;
+}
+
+.showAll {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  height: 100vh;
 }
 
 .sheet {

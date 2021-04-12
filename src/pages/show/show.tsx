@@ -1,10 +1,4 @@
 import './show.css';
-import {
-  // BrowserView,
-  // MobileView,
-  // isBrowser,
-  isMobile
-} from 'react-device-detect';
 import { allTCS, allTVS } from '../../const/name_list';
 import React, { useEffect, useState } from 'react';
 import {
@@ -17,10 +11,7 @@ import {
 import left from '../../imgs/left.png';
 import right from '../../imgs/right.png';
 // import { FullScreen, useFullScreenHandle } from 'react-full-screen';
-import {
-  atomCurrentScreenState,
-  viewModeState
-} from '../../component/button/button';
+import { atomCurrentScreenState } from '../../component/button/button';
 
 const atomCurrentIndex = atom({
   key: 'cgi', // unique ID (with respect to other atoms/selectors)
@@ -132,7 +123,6 @@ export const Show = (texts: Array<string>) => {
   };
 
   const [, setScreenState] = useRecoilState(atomCurrentScreenState);
-  const [viewState] = useRecoilState(viewModeState);
   const [leftOpacity, setleftOpacity] = useState(0.0);
   const [rightOpacity, setRightOpacity] = useState(0.0);
   const [view, setView] = useState(0);
@@ -174,8 +164,6 @@ export const Show = (texts: Array<string>) => {
     }, 1500);
   }, []);
 
-  const userAgent = window.navigator.userAgent;
-
   function iOS() {
     return (
       [
@@ -191,33 +179,8 @@ export const Show = (texts: Array<string>) => {
     );
   }
 
-  const name = '';
   let className = '';
-  // if (userAgent.match(/iPad/i)) {
-  //   // some ipad
-  //   name = 'ipad';
-  //   className = '';
-  // } else if (userAgent.match(/iPhone/i)) {
-  //   // iphone
-  //   name = 'iphone';
-  //   className = 'imgMobile';
-  // } else {
-  //   if (isMobile) {
-  //     if (iOS()) {
-  //       // ipad
-  //       name = 'desktop';
-  //       className = 'imgDesktop';
-  //     } else {
-  //       // android mobile
-  //       name = 'mobile';
-  //       className = 'imgMobile';
-  //     }
-  //   } else {
-  //     // other desktop
-  //     name = 'desktop';
-  //     className = 'imgDesktop';
-  //   }
-  // }
+
   if ((divH * 0.9) / divW > imgH / imgW) {
     className = 'imgMobile';
   } else {
@@ -228,7 +191,6 @@ export const Show = (texts: Array<string>) => {
     if (view === 1) forceClassName = 'imgDesktop';
     if (view === 2) forceClassName = 'imgMobile';
   }
-  const r = 1;
 
   const imgEl = React.createRef<HTMLImageElement>();
   const divRef = React.createRef<HTMLDivElement>();
@@ -236,7 +198,7 @@ export const Show = (texts: Array<string>) => {
   return (
     // <FullScreen handle={handle}>
     <div
-      className="show"
+      className={iOS() ? 'showiOS' : 'showAll'}
       ref={divRef}
       onLoad={() => {
         setDivW(Number(divRef?.current?.offsetWidth) ?? 1);
