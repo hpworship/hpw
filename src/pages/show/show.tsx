@@ -10,8 +10,9 @@ import {
 } from 'recoil';
 import left from '../../imgs/left.png';
 import right from '../../imgs/right.png';
-// import { FullScreen, useFullScreenHandle } from 'react-full-screen';
+import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import { atomCurrentScreenState } from '../../component/button/button';
+import { iOS } from '../select/select';
 
 const atomCurrentIndex = atom({
   key: 'cgi', // unique ID (with respect to other atoms/selectors)
@@ -131,6 +132,14 @@ export const Show = (texts: Array<string>) => {
   const [divW, setDivW] = useState(1);
   const [divH, setDivH] = useState(1);
 
+  const handle = useFullScreenHandle();
+
+  useEffect(() => {
+    if (!iOS()) {
+      handle.enter();
+    }
+  }, []);
+
   useEffect(() => {
     setTimeout(() => {
       setleftOpacity(0.2);
@@ -164,21 +173,6 @@ export const Show = (texts: Array<string>) => {
     }, 1500);
   }, []);
 
-  function iOS() {
-    return (
-      [
-        'iPad Simulator',
-        'iPhone Simulator',
-        'iPod Simulator',
-        'iPad',
-        'iPhone',
-        'iPod'
-      ].includes(navigator.platform) ||
-      // iPad on iOS 13 detection
-      (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
-    );
-  }
-
   let className = '';
 
   if ((divH * 0.9) / divW > imgH / imgW) {
@@ -195,96 +189,101 @@ export const Show = (texts: Array<string>) => {
   const imgEl = React.createRef<HTMLImageElement>();
   const divRef = React.createRef<HTMLDivElement>();
 
-  return (
-    // <FullScreen handle={handle}>
-    <div
-      className={iOS() ? 'showiOS' : 'showAll'}
-      ref={divRef}
-      onLoad={() => {
-        setDivW(Number(divRef?.current?.offsetWidth) ?? 1);
-        setDivH(Number(divRef?.current?.offsetHeight) ?? 1);
-      }}
-    >
-      {/* <div hidden={isLoading}>
-        <CustomImage
-          // className={'sheet ' + fitName}
-          className={'sheet'}
-          src={`${process.env.PUBLIC_URL}${paths[cgi]}`}
-          alt={paths[cgi]}
-          onState={(v: boolean): void => setIsLoading(v)}
-        />
-      </div> */}
-      <div className="sheet">
-        <img
-          ref={imgEl}
-          className={view === 0 ? className : forceClassName}
-          src={`${process.env.PUBLIC_URL}${paths[cgi]}`}
-          alt={paths[cgi]}
-          loading="eager"
-          onLoad={() => {
-            setImgW(imgEl?.current?.naturalWidth ?? 1);
-            setImgH(imgEl?.current?.naturalHeight ?? 1);
-          }}
-        />
+  const mainContent = (
+    <div>
+      <div
+        className={iOS() ? 'showiOS' : 'showAll'}
+        ref={divRef}
+        onLoad={() => {
+          setDivW(Number(divRef?.current?.offsetWidth) ?? 1);
+          setDivH(Number(divRef?.current?.offsetHeight) ?? 1);
+        }}
+      >
+        {/* <div hidden={isLoading}>
+    <CustomImage
+      // className={'sheet ' + fitName}
+      className={'sheet'}
+      src={`${process.env.PUBLIC_URL}${paths[cgi]}`}
+      alt={paths[cgi]}
+      onState={(v: boolean): void => setIsLoading(v)}
+    />
+  </div> */}
+        <div className="sheet">
+          <img
+            ref={imgEl}
+            className={view === 0 ? className : forceClassName}
+            src={`${process.env.PUBLIC_URL}${paths[cgi]}`}
+            alt={paths[cgi]}
+            loading="eager"
+            onLoad={() => {
+              setImgW(imgEl?.current?.naturalWidth ?? 1);
+              setImgH(imgEl?.current?.naturalHeight ?? 1);
+            }}
+          />
 
-        <div className="leftRightButton">
+          <div className="leftRightButton">
+            <div
+              onClick={() => onBack()}
+              className="left"
+              style={{
+                opacity: leftOpacity
+              }}
+            >
+              <img src={left} alt="left" style={{ height: 90 }} />
+            </div>
+            <div
+              onClick={() => onNext()}
+              className="right"
+              style={{
+                opacity: rightOpacity
+              }}
+            >
+              <img src={right} alt="right" style={{ height: 90 }} />
+            </div>
+          </div>
+        </div>
+
+        <SongsNode onBack={onBack} onNext={onNext} songs={songNames} />
+        <div>
           <div
-            onClick={() => onBack()}
-            className="left"
-            style={{
-              opacity: leftOpacity
+            className="stopButtonView"
+            onClick={() => setScreenState('select')}
+          >
+            <div className="stopButton"></div>
+          </div>
+        </div>
+
+        <div>
+          <div
+            className="changeButtonView"
+            onClick={() => {
+              if (view === 0) setView(1);
+              if (view === 1) setView(2);
+              if (view === 2) setView(0);
             }}
           >
-            <img src={left} alt="left" style={{ height: 90 }} />
-          </div>
-          <div
-            onClick={() => onNext()}
-            className="right"
-            style={{
-              opacity: rightOpacity
-            }}
-          >
-            <img src={right} alt="right" style={{ height: 90 }} />
+            <div className="changeButton">
+              <h6>{view}</h6>
+            </div>
           </div>
         </div>
-      </div>
-
-      <SongsNode onBack={onBack} onNext={onNext} songs={songNames} />
-      <div>
-        <div
-          className="stopButtonView"
-          onClick={() => setScreenState('select')}
-        >
-          <div className="stopButton"></div>
-        </div>
-      </div>
-
-      <div>
-        <div
-          className="changeButtonView"
-          onClick={() => {
-            if (view === 0) setView(1);
-            if (view === 1) setView(2);
-            if (view === 2) setView(0);
-          }}
-        >
-          <div className="changeButton">
-            <h6>{view}</h6>
-          </div>
-        </div>
-      </div>
-      {/* {isLoading && (
-        <div className="loading">
-          <h1 className="loadingText">loading...</h1>
-        </div>
-      )} */}
-      {/* <div className="showName">
-        <h6>{`${imgW} - ${imgH}`}</h6>
-      </div>
-      <div className="showName2">
-        <h6>{`${divW} - ${divH}`}</h6>
-      </div> */}
+        {/* {isLoading && (
+    <div className="loading">
+      <h1 className="loadingText">loading...</h1>
     </div>
-    // </FullScreen>
+  )} */}
+        {/* <div className="showName">
+    <h6>{`${imgW} - ${imgH}`}</h6>
+  </div>
+  <div className="showName2">
+    <h6>{`${divW} - ${divH}`}</h6>
+  </div> */}
+      </div>
+    </div>
   );
+
+  if (!iOS()) {
+    return <FullScreen handle={handle}>{mainContent}</FullScreen>;
+  }
+  return mainContent;
 };

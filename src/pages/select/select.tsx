@@ -2,7 +2,7 @@
 import { Button } from '../../component/button/button';
 import { Result } from '../select_result/result';
 import './select.css';
-function iOS() {
+export function iOS() {
   return (
     [
       'iPad Simulator',
