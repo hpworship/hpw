@@ -17,7 +17,13 @@ export function iOS() {
   );
 }
 export const Select = () => {
-  return (
+  // const handle = useFullScreenHandle();
+  // useEffect(() => {
+  //   if (!iOS()) {
+  //     handle.enter();
+  //   }
+  // }, []);
+  const mainContent = (
     <div className={iOS() ? 'baseModeiOS' : 'baseModeAll'}>
       <div className="result">
         <Result />
@@ -38,4 +44,9 @@ export const Select = () => {
       </div>
     </div>
   );
+
+  // if (!iOS()) {
+  //   return <FullScreen handle={handle}>{mainContent}</FullScreen>;
+  // }
+  return mainContent;
 };

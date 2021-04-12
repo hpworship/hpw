@@ -175,7 +175,7 @@ export const Show = (texts: Array<string>) => {
 
   let className = '';
 
-  if ((divH * 0.9) / divW > imgH / imgW) {
+  if ((divH * (iOS() ? 0.9 : 1)) / divW >= imgH / imgW) {
     className = 'imgMobile';
   } else {
     className = 'imgDesktop';
