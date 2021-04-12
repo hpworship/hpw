@@ -173,3 +173,13 @@
   height: 40px;
   background-color: red;
 }
+
+.showName2 {
+  display: flex;
+  position: absolute;
+  top: 80px;
+  left: 20px;
+  width: 150px;
+  height: 40px;
+  background-color: blue;
+}

@@ -136,6 +136,10 @@ export const Show = (texts: Array<string>) => {
   const [leftOpacity, setleftOpacity] = useState(0.0);
   const [rightOpacity, setRightOpacity] = useState(0.0);
   const [view, setView] = useState(0);
+  const [imgW, setImgW] = useState(1);
+  const [imgH, setImgH] = useState(1);
+  const [divW, setDivW] = useState(1);
+  const [divH, setDivH] = useState(1);
 
   useEffect(() => {
     setTimeout(() => {
@@ -187,41 +191,58 @@ export const Show = (texts: Array<string>) => {
     );
   }
 
-  let name = '';
+  const name = '';
   let className = '';
-  if (userAgent.match(/iPad/i)) {
-    // some ipad
-    name = 'ipad';
-    className = '';
-  } else if (userAgent.match(/iPhone/i)) {
-    // iphone
-    name = 'iphone';
+  // if (userAgent.match(/iPad/i)) {
+  //   // some ipad
+  //   name = 'ipad';
+  //   className = '';
+  // } else if (userAgent.match(/iPhone/i)) {
+  //   // iphone
+  //   name = 'iphone';
+  //   className = 'imgMobile';
+  // } else {
+  //   if (isMobile) {
+  //     if (iOS()) {
+  //       // ipad
+  //       name = 'desktop';
+  //       className = 'imgDesktop';
+  //     } else {
+  //       // android mobile
+  //       name = 'mobile';
+  //       className = 'imgMobile';
+  //     }
+  //   } else {
+  //     // other desktop
+  //     name = 'desktop';
+  //     className = 'imgDesktop';
+  //   }
+  // }
+  if ((divH * 0.9) / divW > imgH / imgW) {
     className = 'imgMobile';
   } else {
-    if (isMobile) {
-      if (iOS()) {
-        // ipad
-        name = 'desktop';
-        className = 'imgDesktop';
-      } else {
-        // android mobile
-        name = 'mobile';
-        className = 'imgMobile';
-      }
-    } else {
-      // other desktop
-      name = 'desktop';
-      className = 'imgDesktop';
-    }
+    className = 'imgDesktop';
   }
   let forceClassName = '';
   if (view > 0) {
     if (view === 1) forceClassName = 'imgDesktop';
     if (view === 2) forceClassName = 'imgMobile';
   }
+  const r = 1;
+
+  const imgEl = React.createRef<HTMLImageElement>();
+  const divRef = React.createRef<HTMLDivElement>();
+
   return (
     // <FullScreen handle={handle}>
-    <div className="show">
+    <div
+      className="show"
+      ref={divRef}
+      onLoad={() => {
+        setDivW(Number(divRef?.current?.offsetWidth) ?? 1);
+        setDivH(Number(divRef?.current?.offsetHeight) ?? 1);
+      }}
+    >
       {/* <div hidden={isLoading}>
         <CustomImage
           // className={'sheet ' + fitName}
@@ -233,11 +254,15 @@ export const Show = (texts: Array<string>) => {
       </div> */}
       <div className="sheet">
         <img
+          ref={imgEl}
           className={view === 0 ? className : forceClassName}
           src={`${process.env.PUBLIC_URL}${paths[cgi]}`}
           alt={paths[cgi]}
           loading="eager"
-          onLoad={(): void => {}}
+          onLoad={() => {
+            setImgW(imgEl?.current?.naturalWidth ?? 1);
+            setImgH(imgEl?.current?.naturalHeight ?? 1);
+          }}
         />
 
         <div className="leftRightButton">
@@ -292,7 +317,10 @@ export const Show = (texts: Array<string>) => {
         </div>
       )} */}
       {/* <div className="showName">
-        <h6>{name}</h6>
+        <h6>{`${imgW} - ${imgH}`}</h6>
+      </div>
+      <div className="showName2">
+        <h6>{`${divW} - ${divH}`}</h6>
       </div> */}
     </div>
     // </FullScreen>
