@@ -265,7 +265,10 @@ export const Show = (texts: Array<string>) => {
         <div>
           <div
             className="stopButtonView"
-            onClick={() => setScreenState('select')}
+            onClick={() => {
+              setScreenState('select');
+              setCgi(0);
+            }}
           >
             <div className="stopButton"></div>
           </div>
@@ -297,21 +300,21 @@ export const Show = (texts: Array<string>) => {
     <h6>{`${divW} - ${divH}`}</h6>
   </div> */}
         {/* cfmark */}
-        {hiddenCount >= 7 && (
+        {/* {hiddenCount >= 7 && (
           <div className="showName2">
             {loadedURLs.map((item: string, index: number) => (
               <h6 key={index.toString()}>{item}</h6>
             ))}
           </div>
-        )}
-        <div>
+        )} */}
+        {/* <div>
           <div
             className="hiddenButtonView"
             onClick={() => setHiddenCount(hiddenCount + 1)}
           >
             <div className="hiddenButton"></div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
