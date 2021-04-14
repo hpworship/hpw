@@ -13,6 +13,7 @@ import right from '../../imgs/right.png';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import { atomCurrentScreenState } from '../../component/button/button';
 import { iOS } from '../select/select';
+import { number } from 'yargs';
 
 const atomCurrentIndex = atom({
   key: 'cgi', // unique ID (with respect to other atoms/selectors)
@@ -131,6 +132,8 @@ export const Show = (texts: Array<string>) => {
   const [imgH, setImgH] = useState(1);
   const [divW, setDivW] = useState(1);
   const [divH, setDivH] = useState(1);
+  const [loadedURLs, setloadedURLs] = useState<string[]>([]);
+  const [hiddenCount, setHiddenCount] = useState(0);
 
   const handle = useFullScreenHandle();
 
@@ -189,6 +192,18 @@ export const Show = (texts: Array<string>) => {
   const imgEl = React.createRef<HTMLImageElement>();
   const divRef = React.createRef<HTMLDivElement>();
 
+  useEffect(() => {
+    paths.forEach((url) => {
+      const img = new Image();
+      img.src = `${process.env.PUBLIC_URL}${url}`;
+      img.onload = () => {
+        if (!loadedURLs.includes(url)) {
+          setloadedURLs([...loadedURLs, url]);
+        }
+      };
+    });
+  }, []);
+
   const mainContent = (
     <div>
       <div
@@ -218,6 +233,9 @@ export const Show = (texts: Array<string>) => {
             onLoad={() => {
               setImgW(imgEl?.current?.naturalWidth ?? 1);
               setImgH(imgEl?.current?.naturalHeight ?? 1);
+              if (!loadedURLs.includes(paths[cgi])) {
+                setloadedURLs([...loadedURLs, paths[cgi]]);
+              }
             }}
           />
 
@@ -278,6 +296,22 @@ export const Show = (texts: Array<string>) => {
   <div className="showName2">
     <h6>{`${divW} - ${divH}`}</h6>
   </div> */}
+        {/* cfmark */}
+        {hiddenCount >= 7 && (
+          <div className="showName2">
+            {loadedURLs.map((item: string, index: number) => (
+              <h6 key={index.toString()}>{item}</h6>
+            ))}
+          </div>
+        )}
+        <div>
+          <div
+            className="hiddenButtonView"
+            onClick={() => setHiddenCount(hiddenCount + 1)}
+          >
+            <div className="hiddenButton"></div>
+          </div>
+        </div>
       </div>
     </div>
   );
