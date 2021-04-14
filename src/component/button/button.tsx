@@ -8,6 +8,11 @@ import { isMobile } from 'react-device-detect';
 const MAX_TC_SONG_NUMBER = 903;
 const MAX_TVCHH_SONG_NUMBER = 387;
 
+export const atomDevMode = atom({
+  key: 'devModeState',
+  default: false
+});
+
 export const atomCurrentScreenState = atom({
   key: 'screenState',
   default: 'select'

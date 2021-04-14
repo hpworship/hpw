@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { selectingState } from '../../atom/select_state';
+import { atomDevMode } from '../../component/button/button';
 import './result.css';
 
 export const Result = () => {
@@ -31,15 +33,26 @@ export const Result = () => {
     );
   }
 
+  const [devMode, setDevMode] = useRecoilState(atomDevMode);
+  const [clickCount, setClickCount] = useState(0);
+  useEffect(() => {
+    if (clickCount % 7 === 0) {
+      setDevMode(!devMode);
+    }
+  }, [clickCount]);
+
   return (
-    <div className="resultB">
+    <div className="resultB" onClick={() => setClickCount(clickCount + 1)}>
       {state.selected.length > 0 && (
         <div className="selectedSong">
           {songNodes(state.selected.split(', '))}
         </div>
       )}
       {state.typing.length > 0 && (
-        <div className="resultTyping">
+        <div
+          className="resultTyping"
+          onClick={() => setClickCount(clickCount + 1)}
+        >
           <h6 className="typingText">{state.typing}</h6>
         </div>
       )}

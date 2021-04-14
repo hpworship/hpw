@@ -11,7 +11,10 @@ import {
 import left from '../../imgs/left.png';
 import right from '../../imgs/right.png';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
-import { atomCurrentScreenState } from '../../component/button/button';
+import {
+  atomCurrentScreenState,
+  atomDevMode
+} from '../../component/button/button';
 import { iOS } from '../select/select';
 import { number } from 'yargs';
 
@@ -134,6 +137,7 @@ export const Show = (texts: Array<string>) => {
   const [divH, setDivH] = useState(1);
   const [loadedURLs, setloadedURLs] = useState<string[]>([]);
   const [hiddenCount, setHiddenCount] = useState(0);
+  const [devMode, setDevMode] = useRecoilState(atomDevMode);
 
   const handle = useFullScreenHandle();
 
@@ -300,13 +304,13 @@ export const Show = (texts: Array<string>) => {
     <h6>{`${divW} - ${divH}`}</h6>
   </div> */}
         {/* cfmark */}
-        {/* {hiddenCount >= 7 && (
+        {devMode && (
           <div className="showName2">
             {loadedURLs.map((item: string, index: number) => (
               <h6 key={index.toString()}>{item}</h6>
             ))}
           </div>
-        )} */}
+        )}
         {/* <div>
           <div
             className="hiddenButtonView"
