@@ -304,13 +304,13 @@ export const Show = (texts: Array<string>) => {
     <h6>{`${divW} - ${divH}`}</h6>
   </div> */}
         {/* cfmark */}
-        {devMode && (
+        {/* {devMode && (
           <div className="showName2">
             {loadedURLs.map((item: string, index: number) => (
               <h6 key={index.toString()}>{item}</h6>
             ))}
           </div>
-        )}
+        )} */}
         {/* <div>
           <div
             className="hiddenButtonView"
